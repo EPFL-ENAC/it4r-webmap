@@ -10,21 +10,25 @@ const center: LngLatLike = { lat: 18.0735, lng: -15.9582 }
 const zoom = 12
 const permanentLayerIds = ['background', 'natural_earth']
 const popupLayerIds = ['piezometer_locations']
-const items: SelectableItem[] = [
+const selectableItems: SelectableItem[] = [
   {
     title: 'piezoLocations',
     ids: ['piezometer_locations', 'piezometer_locations_labels'],
     selected: true
   },
   {
-    title: 'cityLimit',
-    ids: ['approximate_development_limit'],
-    selected: true
-  },
-  {
-    title: 'dataExtent',
-    ids: ['data_extent'],
-    selected: true
+    title: 'limits',
+    children: [
+      {
+        title: 'cityLimit',
+        ids: ['approximate_development_limit'],
+        selected: true
+      },
+      {
+        title: 'dataExtent',
+        ids: ['data_extent']
+      }
+    ]
   },
   {
     title: 'topography',
@@ -44,7 +48,7 @@ const selectedlayerIds = ref<string[]>([])
   <v-container class="fill-height" fluid>
     <v-row class="fill-height">
       <v-col cols="3">
-        <LayerSelector v-model="selectedlayerIds" :items="items" />
+        <LayerSelector v-model="selectedlayerIds" :items="selectableItems" />
       </v-col>
       <v-col cols="9">
         <MapLibreMap
