@@ -12,30 +12,30 @@ const permanentLayerIds = ['background', 'natural_earth']
 const popupLayerIds = ['piezometer_locations']
 const selectableItems: SelectableItem[] = [
   {
-    title: 'piezoLocations',
+    label: 'PiezoLocations',
     ids: ['piezometer_locations', 'piezometer_locations_labels'],
     selected: true
   },
   {
-    title: 'limits',
+    label: 'Limits',
     children: [
       {
-        title: 'cityLimit',
+        label: 'cityLimit',
         ids: ['approximate_development_limit'],
         selected: true
       },
       {
-        title: 'dataExtent',
+        label: 'dataExtent',
         ids: ['data_extent']
       }
     ]
   },
   {
-    title: 'topography',
+    label: 'topography',
     ids: ['topo_clipped']
   },
   {
-    title: 'test',
+    label: 'test',
     ids: ['test_areas'],
     selected: true
   }
@@ -48,7 +48,16 @@ const selectedlayerIds = ref<string[]>([])
   <v-container class="fill-height" fluid>
     <v-row class="fill-height">
       <v-col cols="3">
-        <LayerSelector v-model="selectedlayerIds" :items="selectableItems" />
+        <v-row>
+          <v-col>
+            <LayerSelector v-model="selectedlayerIds" :items="selectableItems" />
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-card title="Legends"></v-card>
+          </v-col>
+        </v-row>
       </v-col>
       <v-col cols="9">
         <MapLibreMap

@@ -1,19 +1,21 @@
 <script setup lang="ts">
-import type { SelectItemObject } from '@/utils/vuetify'
 import { computed, onMounted } from 'vue'
 
 export type SelectableItem = SelectableSingleItem | SelectableGroupItem
 
 export interface SelectableSingleItem {
-  title: string
+  label: string
   ids: string[]
   selected?: boolean
 }
-
 export interface SelectableGroupItem {
-  title: string
+  label: string
   children: SelectableSingleItem[]
   selected?: boolean
+}
+interface CheckboxProps {
+  label: string
+  value: string[]
 }
 
 const props = withDefaults(
@@ -46,20 +48,18 @@ const singleItems = computed<SelectableSingleItem[]>(() =>
     }
   })
 )
-const items = computed<
-  (SelectItemObject<string[]> | { title: string; children: SelectItemObject<string[]>[] })[]
->(() =>
+const items = computed<(CheckboxProps | { label: string; children: CheckboxProps[] })[]>(() =>
   props.items.map((item) =>
     'children' in item
       ? {
-          title: item.title,
+          label: item.label,
           children: item.children.map((child) => ({
-            title: child.title,
+            label: child.label,
             value: child.ids
           }))
         }
       : {
-          title: item.title,
+          label: item.label,
           value: item.ids
         }
   )
@@ -87,7 +87,7 @@ function selectAll(value: boolean, children: string[][]) {
 <template>
   <v-card>
     <v-card-item>
-      <v-card-title class="text-capitalize">{{ $t('layer', 2) }}</v-card-title>
+      <v-card-title class="text-capitalize">Layers</v-card-title>
     </v-card-item>
     <v-expansion-panels multiple variant="accordion">
       <v-expansion-panel v-for="(item, index) in items" :key="index">
@@ -96,12 +96,12 @@ function selectAll(value: boolean, children: string[][]) {
             color="primary"
             density="compact"
             hide-details
-            :label="$t(`layers.${item.title}`)"
-            :model-value="item.children.every((child) => selectedItems.includes(child.value))"
             :indeterminate="
               item.children.some((child) => selectedItems.includes(child.value)) &&
               !item.children.every((child) => selectedItems.includes(child.value))
             "
+            :label="item.label"
+            :model-value="item.children.every((child) => selectedItems.includes(child.value))"
             @update:model-value="
               selectAll(
                 $event,
@@ -121,8 +121,8 @@ function selectAll(value: boolean, children: string[][]) {
             color="primary"
             density="compact"
             hide-details
+            :label="item.label"
             :value="item.value"
-            :label="$t(`layers.${item.title}`)"
           />
         </v-expansion-panel-title>
         <v-expansion-panel-text v-if="'children' in item">
@@ -133,8 +133,8 @@ function selectAll(value: boolean, children: string[][]) {
             color="primary"
             density="compact"
             hide-details
+            :label="child.label"
             :value="child.value"
-            :label="$t(`layers.${child.title}`)"
           >
           </v-checkbox>
         </v-expansion-panel-text>
