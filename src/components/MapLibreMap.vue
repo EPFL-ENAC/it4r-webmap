@@ -11,8 +11,11 @@ import {
   type LngLatLike,
   type StyleSpecification
 } from 'maplibre-gl'
-import { onMounted, ref, watch } from 'vue'
+import { defineExpose, onMounted, ref, watch } from 'vue'
 
+defineExpose({
+  update
+})
 const props = withDefaults(
   defineProps<{
     styleSpec: string | StyleSpecification
@@ -27,7 +30,7 @@ const props = withDefaults(
   }>(),
   {
     center: undefined,
-    zoom: 10,
+    zoom: 12,
     aspectRatio: undefined,
     minZoom: undefined,
     maxZoom: undefined,
@@ -55,38 +58,60 @@ onMounted(() => {
   map.once('load', () => {
     filterLayers(props.filterIds)
   })
-
-  props.popupLayerIds.forEach((layerId) => {
-    const popup = new Popup({
-      closeButton: false,
-      closeOnClick: false
-    })
-    map?.on('mouseenter', layerId, function (e) {
-      if (map) {
-        map.getCanvas().style.cursor = 'pointer'
-        popup
-          .setLngLat(e.lngLat)
-          .setHTML(
-            Object.entries(e.features?.at(0)?.properties ?? {})
-              .map(([key, value]) => `<strong>${key}:</strong> ${value}`)
-              .join('<br>')
-          )
-          .addTo(map)
-      }
-    })
-    map?.on('mouseleave', layerId, function () {
-      if (map) {
-        map.getCanvas().style.cursor = ''
-      }
-      popup.remove()
-    })
-  })
 })
 
 watch(
-  () => props.filterIds,
-  (filterIds) => filterLayers(filterIds)
+  () => props.styleSpec,
+  (styleSpec) => {
+    map?.setStyle(styleSpec)
+  },
+  { immediate: true }
 )
+watch(
+  () => props.popupLayerIds,
+  (popupLayerIds) => {
+    popupLayerIds.forEach((layerId) => {
+      const popup = new Popup({
+        closeButton: false,
+        closeOnClick: false
+      })
+      map?.on('mouseenter', layerId, function (e) {
+        if (map) {
+          map.getCanvas().style.cursor = 'pointer'
+          popup
+            .setLngLat(e.lngLat)
+            .setHTML(
+              Object.entries(e.features?.at(0)?.properties ?? {})
+                .map(([key, value]) => `<strong>${key}:</strong> ${value}`)
+                .join('<br>')
+            )
+            .addTo(map)
+        }
+      })
+      map?.on('mouseleave', layerId, function () {
+        if (map) {
+          map.getCanvas().style.cursor = ''
+        }
+        popup.remove()
+      })
+    })
+  },
+  { immediate: true }
+)
+watch(
+  () => props.filterIds,
+  (filterIds) => filterLayers(filterIds),
+  { immediate: true }
+)
+
+function update(center?: LngLatLike, zoom?: number) {
+  if (center !== undefined) {
+    map?.setCenter(center)
+  }
+  if (zoom !== undefined) {
+    map?.setZoom(zoom)
+  }
+}
 
 function filterLayers(filterIds?: string[]) {
   if (filterIds) {

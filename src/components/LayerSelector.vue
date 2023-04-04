@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, watch } from 'vue'
 
 export type SelectableItem = SelectableSingleItem | SelectableGroupItem
-
-export interface SelectableSingleItem {
+export interface SelectableParentItem {
   label: string
-  ids: string[]
   selected?: boolean
 }
-export interface SelectableGroupItem {
-  label: string
+export interface SelectableSingleItem extends SelectableParentItem {
+  ids: string[]
+}
+export interface SelectableGroupItem extends SelectableParentItem {
   children: SelectableSingleItem[]
-  selected?: boolean
 }
 interface CheckboxProps {
   label: string
@@ -31,13 +30,6 @@ const props = withDefaults(
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string[]): void
 }>()
-
-onMounted(() => {
-  emit(
-    'update:modelValue',
-    singleItems.value.filter((item) => item.selected).flatMap((item) => item.ids)
-  )
-})
 
 const singleItems = computed<SelectableSingleItem[]>(() =>
   props.items.flatMap((item) => {
@@ -64,7 +56,6 @@ const items = computed<(CheckboxProps | { label: string; children: CheckboxProps
         }
   )
 )
-
 const selectedItems = computed<string[][]>({
   get: () =>
     singleItems.value
@@ -74,6 +65,17 @@ const selectedItems = computed<string[][]>({
     emit('update:modelValue', value.flat())
   }
 })
+
+watch(
+  singleItems,
+  (value) => {
+    emit(
+      'update:modelValue',
+      value.filter((item) => item.selected).flatMap((item) => item.ids)
+    )
+  },
+  { immediate: true }
+)
 
 function selectAll(value: boolean, children: string[][]) {
   if (value) {

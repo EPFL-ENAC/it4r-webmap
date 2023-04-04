@@ -1,73 +1,10 @@
 <script setup lang="ts">
-import LayerSelector, { type SelectableItem } from '@/components/LayerSelector.vue'
-import MapLibreMap from '@/components/MapLibreMap.vue'
-import type { LngLatLike } from 'maplibre-gl'
-import { ref } from 'vue'
-
-const style =
-  'https://raw.githubusercontent.com/EPFL-ENAC/EIRA-data/main/Data_vector_style/style_raster_background.json'
-const center: LngLatLike = { lat: 18.0735, lng: -15.9582 }
-const zoom = 12
-const permanentLayerIds = ['background', 'natural_earth']
-const popupLayerIds = ['piezometer_locations']
-const selectableItems: SelectableItem[] = [
-  {
-    label: 'PiezoLocations',
-    ids: ['piezometer_locations', 'piezometer_locations_labels'],
-    selected: true
-  },
-  {
-    label: 'Limits',
-    children: [
-      {
-        label: 'cityLimit',
-        ids: ['approximate_development_limit'],
-        selected: true
-      },
-      {
-        label: 'dataExtent',
-        ids: ['data_extent']
-      }
-    ]
-  },
-  {
-    label: 'topography',
-    ids: ['topo_clipped']
-  },
-  {
-    label: 'test',
-    ids: ['test_areas'],
-    selected: true
-  }
-]
-
-const selectedlayerIds = ref<string[]>([])
+import JsonWebMap from '@/components/JsonWebMap.vue'
 </script>
 
 <template>
-  <v-container class="fill-height" fluid>
-    <v-row class="fill-height">
-      <v-col cols="3">
-        <v-row>
-          <v-col>
-            <LayerSelector v-model="selectedlayerIds" :items="selectableItems" />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-card title="Legends"></v-card>
-          </v-col>
-        </v-row>
-      </v-col>
-      <v-col cols="9">
-        <MapLibreMap
-          :center="center"
-          :style-spec="style"
-          :filter-ids="[...permanentLayerIds, ...selectedlayerIds]"
-          :popup-layer-ids="popupLayerIds"
-          :zoom="zoom"
-        />
-      </v-col>
-    </v-row>
-  </v-container>
+  <JsonWebMap
+    style-url="https://raw.githubusercontent.com/EPFL-ENAC/EIRA-data/main/Data_vector_style/style_raster_background.json"
+    parameters-url="https://raw.githubusercontent.com/EPFL-ENAC/EIRA-data/feature/parameters/Data_vector_style/parameters.json"
+  />
 </template>
