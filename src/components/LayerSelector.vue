@@ -1,17 +1,7 @@
 <script setup lang="ts">
+import type { SelectableItem, SelectableSingleItem } from '@/utils/layerSelector'
 import { computed, watch } from 'vue'
 
-export type SelectableItem = SelectableSingleItem | SelectableGroupItem
-export interface SelectableParentItem {
-  label: string
-  selected?: boolean
-}
-export interface SelectableSingleItem extends SelectableParentItem {
-  ids: string[]
-}
-export interface SelectableGroupItem extends SelectableParentItem {
-  children: SelectableSingleItem[]
-}
 interface CheckboxProps {
   label: string
   value: string[]

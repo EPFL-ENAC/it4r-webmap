@@ -1,17 +1,9 @@
 <script setup lang="ts">
-import LayerSelector, { type SelectableItem } from '@/components/LayerSelector.vue'
+import LayerSelector from '@/components/LayerSelector.vue'
 import MapLibreMap from '@/components/MapLibreMap.vue'
+import type { Parameters } from '@/utils/jsonWebMap'
 import axios from 'axios'
-import type { LngLatLike } from 'maplibre-gl'
 import { ref, shallowRef, triggerRef, watch } from 'vue'
-
-interface Parameters {
-  center?: LngLatLike
-  zoom?: number
-  permanentLayerIds?: string[]
-  popupLayerIds?: string[]
-  selectableItems?: SelectableItem[]
-}
 
 const props = defineProps<{
   styleUrl: string
