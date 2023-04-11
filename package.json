@@ -2,6 +2,7 @@
   "name": "it4r-webmap",
   "version": "0.0.0",
   "private": true,
+  "license": "GPL-3.0-or-later",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check build-only",
