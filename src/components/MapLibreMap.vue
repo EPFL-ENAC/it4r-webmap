@@ -11,7 +11,7 @@ import {
   type LngLatLike,
   type StyleSpecification
 } from 'maplibre-gl'
-import { defineExpose, onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
 defineExpose({
   update
