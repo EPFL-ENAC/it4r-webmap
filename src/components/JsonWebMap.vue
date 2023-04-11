@@ -53,7 +53,7 @@ watch(
 <template>
   <v-container class="fill-height" fluid>
     <v-row class="fill-height">
-      <v-col cols="3">
+      <v-col cols="12" md="3" sm="6">
         <v-row>
           <v-col>
             <LayerSelector v-model="selectedlayerIds" :items="parameters.selectableItems" />
@@ -61,7 +61,12 @@ watch(
         </v-row>
         <v-row>
           <v-col>
-            <v-card title="Legends">
+            <v-divider class="border-opacity-100" />
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-card title="Legends" flat>
               <v-card-text>
                 <v-row>
                   <v-col v-for="(item, index) in legendItems" :key="index" cols="12">
@@ -74,7 +79,8 @@ watch(
           </v-col>
         </v-row>
       </v-col>
-      <v-col cols="9">
+      <v-divider class="border-opacity-100" vertical />
+      <v-col cols="12" md="9" sm="6">
         <MapLibreMap
           ref="map"
           :center="parameters.center"

@@ -5,8 +5,8 @@ import { RouterView } from 'vue-router'
 
 <template>
   <v-app>
-    <v-app-bar color="primary" density="compact">
-      <v-tabs class="text-white">
+    <v-app-bar density="compact" flat>
+      <v-tabs>
         <v-tab to="/" :prepend-icon="mdiHome">
           <v-app-bar-title>Home</v-app-bar-title>
         </v-tab>
@@ -21,3 +21,9 @@ import { RouterView } from 'vue-router'
     </v-main>
   </v-app>
 </template>
+
+<style lang="scss" scoped>
+.v-app-bar {
+  border-bottom: 1px solid rgb(var(--v-theme-primary));
+}
+</style>

@@ -77,7 +77,7 @@ function selectAll(value: boolean, children: string[][]) {
 </script>
 
 <template>
-  <v-card>
+  <v-card flat>
     <v-card-item>
       <v-card-title class="text-capitalize">Layers</v-card-title>
     </v-card-item>
