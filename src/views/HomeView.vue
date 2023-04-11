@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import JsonWebMap from '@/components/JsonWebMap.vue'
+
+const parametersUrl = import.meta.env.VITE_PARAMETERS_URL
+const styleUrl = import.meta.env.VITE_STYLE_URL
 </script>
 
 <template>
-  <JsonWebMap
-    style-url="https://raw.githubusercontent.com/EPFL-ENAC/EIRA-data/main/Data_vector_style/style_raster_background.json"
-    parameters-url="https://raw.githubusercontent.com/EPFL-ENAC/EIRA-data/feature/parameters/Data_vector_style/parameters.json"
-  />
+  <JsonWebMap :parameters-url="parametersUrl" :style-url="styleUrl" />
 </template>
