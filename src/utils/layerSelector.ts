@@ -5,6 +5,7 @@ export interface SelectableParentItem {
 }
 export interface SelectableSingleItem extends SelectableParentItem {
   ids: string[]
+  legend?: string
 }
 export interface SelectableGroupItem extends SelectableParentItem {
   children: SelectableSingleItem[]

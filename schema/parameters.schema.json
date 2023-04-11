@@ -39,6 +39,9 @@
                 "label": {
                     "type": "string"
                 },
+                "legend": {
+                    "type": "string"
+                },
                 "selected": {
                     "type": "boolean"
                 }

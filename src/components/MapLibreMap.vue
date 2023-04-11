@@ -40,7 +40,7 @@ const props = withDefaults(
   }
 )
 
-const loading = ref(false)
+const loading = ref(true)
 let map: Map | undefined = undefined
 
 onMounted(() => {
@@ -58,6 +58,7 @@ onMounted(() => {
   map.once('load', () => {
     filterLayers(props.filterIds)
   })
+  loading.value = false
 })
 
 watch(
@@ -130,7 +131,7 @@ function filterLayers(filterIds?: string[]) {
 </script>
 
 <template>
-  <v-progress-linear v-if="loading" :active="loading" indeterminate />
+  <v-progress-linear v-if="loading" active color="primary" indeterminate />
   <v-responsive :aspect-ratio="aspectRatio" height="100%">
     <div id="maplibre-map" />
   </v-responsive>

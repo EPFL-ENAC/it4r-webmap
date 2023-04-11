@@ -3,14 +3,36 @@ import LayerSelector from '@/components/LayerSelector.vue'
 import MapLibreMap from '@/components/MapLibreMap.vue'
 import type { Parameters } from '@/utils/jsonWebMap'
 import axios from 'axios'
-import { ref, shallowRef, triggerRef, watch } from 'vue'
+import { computed, ref, shallowRef, triggerRef, watch } from 'vue'
 
 const props = defineProps<{
   styleUrl: string
   parametersUrl: string
 }>()
 
+const map = ref<InstanceType<typeof MapLibreMap>>()
+const selectedlayerIds = ref<string[]>([])
 const parameters = shallowRef<Parameters>({})
+
+const filterIds = computed<string[]>(() => [
+  ...(parameters.value.permanentLayerIds ?? []),
+  ...selectedlayerIds.value
+])
+const legendItems = computed(() =>
+  (parameters.value.selectableItems ?? [])
+    .flatMap((item) => ('children' in item ? item.children : item))
+    .filter((item) => item.ids.some((id) => filterIds.value.includes(id)))
+    .flatMap((item) =>
+      item.legend !== undefined
+        ? [
+            {
+              label: item.label,
+              legend: item.legend
+            }
+          ]
+        : []
+    )
+)
 
 watch(
   () => props.parametersUrl,
@@ -26,9 +48,6 @@ watch(
   },
   { immediate: true }
 )
-
-const map = ref<InstanceType<typeof MapLibreMap>>()
-const selectedlayerIds = ref<string[]>([])
 </script>
 
 <template>
@@ -42,7 +61,16 @@ const selectedlayerIds = ref<string[]>([])
         </v-row>
         <v-row>
           <v-col>
-            <v-card title="Legends"></v-card>
+            <v-card title="Legends">
+              <v-card-text>
+                <v-row>
+                  <v-col v-for="(item, index) in legendItems" :key="index" cols="12">
+                    <h3>{{ item.label }}</h3>
+                    <div>{{ item.legend }}</div>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+            </v-card>
           </v-col>
         </v-row>
       </v-col>
@@ -51,7 +79,7 @@ const selectedlayerIds = ref<string[]>([])
           ref="map"
           :center="parameters.center"
           :style-spec="styleUrl"
-          :filter-ids="[...(parameters.permanentLayerIds ?? []), ...selectedlayerIds]"
+          :filter-ids="filterIds"
           :popup-layer-ids="parameters.popupLayerIds"
           :zoom="parameters.zoom"
         />
