@@ -5,7 +5,7 @@
 Two external json files to load configuration in [`.env`](.env) :
 
 - **VITE_PARAMETERS_URL**: Webmap parameters following [this JSON Schema](schema/parameters.schema.json)
-- **VITE_STYLE_URL**: [MapLibre style](https://maplibre.org/maplibre-style/)
+- **VITE_STYLE_URL**: [MapLibre style](https://maplibre.org/maplibre-style-spec)
 
 ## Recommended IDE Setup
 
