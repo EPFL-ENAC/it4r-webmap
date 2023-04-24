@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import JsonWebMap from '@/components/JsonWebMap.vue'
+import { useConfigurationStore } from '@/stores/configuration.js'
 
-const parametersUrl = import.meta.env.VITE_PARAMETERS_URL
-const styleUrl = import.meta.env.VITE_STYLE_URL
+const { parametersUrl, styleUrl } = useConfigurationStore()
 </script>
 
 <template>

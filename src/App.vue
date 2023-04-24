@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { mdiHome, mdiInformation } from '@mdi/js'
+import { mdiCog, mdiHome, mdiInformation } from '@mdi/js'
 import { RouterView } from 'vue-router'
 </script>
 
@@ -9,6 +9,9 @@ import { RouterView } from 'vue-router'
       <v-tabs>
         <v-tab to="/" :prepend-icon="mdiHome">
           <v-app-bar-title>Home</v-app-bar-title>
+        </v-tab>
+        <v-tab to="/configuration" :prepend-icon="mdiCog">
+          <v-app-bar-title>Configuration</v-app-bar-title>
         </v-tab>
         <v-tab to="/about" :prepend-icon="mdiInformation">
           <v-app-bar-title>About</v-app-bar-title>
