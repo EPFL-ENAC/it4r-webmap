@@ -2,6 +2,7 @@
 import LayerSelector from '@/components/LayerSelector.vue'
 import MapLibreMap from '@/components/MapLibreMap.vue'
 import type { Parameters } from '@/utils/jsonWebMap'
+import type { SelectableSingleItem } from '@/utils/layerSelector'
 import axios from 'axios'
 import { computed, ref, shallowRef, triggerRef, watch } from 'vue'
 
@@ -11,17 +12,18 @@ const props = defineProps<{
 }>()
 
 const map = ref<InstanceType<typeof MapLibreMap>>()
-const selectedlayerIds = ref<string[]>([])
+const selectedLayerIds = ref<string[]>([])
 const parameters = shallowRef<Parameters>({})
 
-const filterIds = computed<string[]>(() => [
-  ...(parameters.value.permanentLayerIds ?? []),
-  ...selectedlayerIds.value
-])
+const singleItems = computed<SelectableSingleItem[]>(() =>
+  (parameters.value.selectableItems ?? []).flatMap((item) =>
+    'children' in item ? item.children : [item]
+  )
+)
+const selectableLayerIds = computed<string[]>(() => singleItems.value.flatMap((item) => item.ids))
 const legendItems = computed(() =>
-  (parameters.value.selectableItems ?? [])
-    .flatMap((item) => ('children' in item ? item.children : item))
-    .filter((item) => item.ids.some((id) => filterIds.value.includes(id)))
+  singleItems.value
+    .filter((item) => selectedLayerIds.value.some((id) => item.ids.includes(id)))
     .flatMap((item) =>
       item.legend !== undefined
         ? [
@@ -56,7 +58,7 @@ watch(
       <v-col cols="12" md="3" sm="6" class="pl-6">
         <v-row>
           <v-col>
-            <LayerSelector v-model="selectedlayerIds" :items="parameters.selectableItems" />
+            <LayerSelector v-model="selectedLayerIds" :items="parameters.selectableItems" />
           </v-col>
         </v-row>
         <v-divider class="border-opacity-100 mx-n3" />
@@ -81,7 +83,8 @@ watch(
           ref="map"
           :center="parameters.center"
           :style-spec="styleUrl"
-          :filter-ids="filterIds"
+          :selectable-layer-ids="selectableLayerIds"
+          :selected-layer-ids="selectedLayerIds"
           :popup-layer-ids="parameters.popupLayerIds"
           :zoom="parameters.zoom"
         />

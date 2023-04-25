@@ -24,7 +24,8 @@ const props = withDefaults(
     aspectRatio?: number
     minZoom?: number
     maxZoom?: number
-    filterIds?: string[]
+    selectableLayerIds?: string[]
+    selectedLayerIds?: string[]
     popupLayerIds?: string[]
     areaLayerIds?: string[]
   }>(),
@@ -34,7 +35,8 @@ const props = withDefaults(
     aspectRatio: undefined,
     minZoom: undefined,
     maxZoom: undefined,
-    filterIds: undefined,
+    selectableLayerIds: () => [],
+    selectedLayerIds: () => [],
     popupLayerIds: () => [],
     areaLayerIds: () => []
   }
@@ -56,7 +58,7 @@ onMounted(() => {
   map.addControl(new FullscreenControl({}))
 
   map.once('load', () => {
-    filterLayers(props.filterIds)
+    filterLayers()
   })
   loading.value = false
 })
@@ -99,11 +101,9 @@ watch(
   },
   { immediate: true }
 )
-watch(
-  () => props.filterIds,
-  (filterIds) => filterLayers(filterIds),
-  { immediate: true }
-)
+watch([() => props.selectableLayerIds, () => props.selectedLayerIds], () => filterLayers(), {
+  immediate: true
+})
 
 function update(center?: LngLatLike, zoom?: number) {
   if (center !== undefined) {
@@ -114,19 +114,17 @@ function update(center?: LngLatLike, zoom?: number) {
   }
 }
 
-function filterLayers(filterIds?: string[]) {
-  if (filterIds) {
-    map
-      ?.getStyle()
-      .layers.filter((layer) => !layer.id.startsWith('gl-draw'))
-      .forEach((layer) => {
-        map?.setLayoutProperty(
-          layer.id,
-          'visibility',
-          filterIds.includes(layer.id) ? 'visible' : 'none'
-        )
-      })
-  }
+function filterLayers() {
+  map
+    ?.getStyle()
+    .layers.filter((layer) => props.selectableLayerIds.includes(layer.id))
+    .forEach((layer) => {
+      map?.setLayoutProperty(
+        layer.id,
+        'visibility',
+        props.selectedLayerIds.includes(layer.id) ? 'visible' : 'none'
+      )
+    })
 }
 </script>
 

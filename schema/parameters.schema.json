@@ -104,27 +104,25 @@
     },
     "properties": {
         "center": {
-            "$ref": "#/definitions/maplibregl.LngLatLike"
-        },
-        "permanentLayerIds": {
-            "items": {
-                "type": "string"
-            },
-            "type": "array"
+            "$ref": "#/definitions/maplibregl.LngLatLike",
+            "description": "Map default center coordinates"
         },
         "popupLayerIds": {
+            "description": "Layers with popup",
             "items": {
                 "type": "string"
             },
             "type": "array"
         },
         "selectableItems": {
+            "description": "Selectable layers organization",
             "items": {
                 "$ref": "#/definitions/SelectableItem"
             },
             "type": "array"
         },
         "zoom": {
+            "description": "Map default zoom level",
             "type": "number"
         }
     },
