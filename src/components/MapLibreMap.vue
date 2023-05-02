@@ -50,7 +50,8 @@ onMounted(() => {
     container: 'maplibre-map',
     style: props.styleSpec,
     center: props.center,
-    zoom: props.zoom
+    zoom: props.zoom,
+    trackResize: true
   })
   map.addControl(new NavigationControl({}))
   map.addControl(new GeolocateControl({}))

@@ -18,4 +18,12 @@ export interface Parameters {
    * Selectable layers organization
    */
   selectableItems?: SelectableItem[]
+  /**
+   * Title of the map
+   */
+  title?: string
+  /**
+   * Subtitle of the map
+   */
+  subtitle?: string
 }

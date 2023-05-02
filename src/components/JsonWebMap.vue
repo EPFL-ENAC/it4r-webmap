@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import LayerSelector from '@/components/LayerSelector.vue'
 import MapLibreMap from '@/components/MapLibreMap.vue'
+import { useTitleStore } from '@/stores/title'
 import type { Parameters } from '@/utils/jsonWebMap'
 import type { SelectableSingleItem } from '@/utils/layerSelector'
+import { mdiChevronLeft, mdiChevronRight, mdiCog, mdiLayers, mdiMapLegend } from '@mdi/js'
 import axios from 'axios'
+import { storeToRefs } from 'pinia'
 import { computed, ref, shallowRef, triggerRef, watch } from 'vue'
+import ConfigurationForm from './ConfigurationForm.vue'
 
 const props = defineProps<{
   styleUrl: string
@@ -14,6 +18,9 @@ const props = defineProps<{
 const map = ref<InstanceType<typeof MapLibreMap>>()
 const selectedLayerIds = ref<string[]>([])
 const parameters = shallowRef<Parameters>({})
+const drawerRail = ref(false)
+
+const { title, subtitle } = storeToRefs(useTitleStore())
 
 const singleItems = computed<SelectableSingleItem[]>(() =>
   (parameters.value.selectableItems ?? []).flatMap((item) =>
@@ -46,6 +53,8 @@ watch(
         parameters.value = data
         triggerRef(parameters)
         map.value?.update(data.center, data.zoom)
+        title.value = data.title
+        subtitle.value = data.subtitle
       })
   },
   { immediate: true }
@@ -53,32 +62,49 @@ watch(
 </script>
 
 <template>
+  <v-navigation-drawer :rail="drawerRail" @click="drawerRail = false">
+    <v-list density="compact" nav>
+      <v-list-item :prepend-icon="drawerRail ? mdiChevronRight : undefined">
+        <template #append>
+          <v-btn :icon="mdiChevronLeft" variant="flat" @click.stop="drawerRail = true" />
+        </template>
+      </v-list-item>
+      <v-list-item :prepend-icon="mdiLayers">
+        <LayerSelector
+          v-if="!drawerRail"
+          v-model="selectedLayerIds"
+          :items="parameters.selectableItems"
+        />
+      </v-list-item>
+      <v-list-item :prepend-icon="mdiMapLegend">
+        <v-card v-if="!drawerRail" title="Legends" flat>
+          <v-card-text>
+            <v-row>
+              <v-col v-for="(item, index) in legendItems" :key="index" cols="12">
+                <h3>{{ item.label }}</h3>
+                <div>{{ item.legend }}</div>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-list-item>
+      <v-divider class="border-opacity-100 mx-n3" />
+      <v-dialog>
+        <!-- eslint-disable-next-line vue/no-template-shadow -->
+        <template #activator="{ props }">
+          <v-list-item v-bind="props" :prepend-icon="mdiCog" title="Configuration" />
+        </template>
+        <v-card title="Configuration">
+          <v-card-text>
+            <ConfigurationForm />
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+    </v-list>
+  </v-navigation-drawer>
   <v-container class="fill-height pa-0" fluid>
     <v-row class="fill-height">
-      <v-col cols="12" md="3" sm="6" class="pl-6">
-        <v-row>
-          <v-col>
-            <LayerSelector v-model="selectedLayerIds" :items="parameters.selectableItems" />
-          </v-col>
-        </v-row>
-        <v-divider class="border-opacity-100 mx-n3" />
-        <v-row>
-          <v-col>
-            <v-card title="Legends" flat>
-              <v-card-text>
-                <v-row>
-                  <v-col v-for="(item, index) in legendItems" :key="index" cols="12">
-                    <h3>{{ item.label }}</h3>
-                    <div>{{ item.legend }}</div>
-                  </v-col>
-                </v-row>
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-col>
-      <v-divider class="border-opacity-100" vertical />
-      <v-col cols="12" md="9" sm="6" class="py-0 pl-0">
+      <v-col cols="12" class="py-0">
         <MapLibreMap
           ref="map"
           :center="parameters.center"
@@ -92,3 +118,9 @@ watch(
     </v-row>
   </v-container>
 </template>
+
+<style lang="scss">
+.v-navigation-drawer {
+  border-right: 1px solid rgb(var(--v-theme-primary)) !important;
+}
+</style>

@@ -1,23 +1,23 @@
 <script setup lang="ts">
-import { mdiCog, mdiHome, mdiInformation } from '@mdi/js'
+import { storeToRefs } from 'pinia'
 import { RouterView } from 'vue-router'
+import { useTitleStore } from './stores/title'
+import epflLogoUrl from '/EPFL_Logo_184X53.svg'
+const { title, subtitle } = storeToRefs(useTitleStore())
 </script>
 
 <template>
   <v-app>
-    <v-app-bar density="compact" flat>
-      <v-tabs>
-        <v-tab to="/" :prepend-icon="mdiHome">
-          <v-app-bar-title>Home</v-app-bar-title>
-        </v-tab>
-        <v-tab to="/configuration" :prepend-icon="mdiCog">
-          <v-app-bar-title>Configuration</v-app-bar-title>
-        </v-tab>
-        <v-tab to="/about" :prepend-icon="mdiInformation">
-          <v-app-bar-title>About</v-app-bar-title>
-        </v-tab>
-      </v-tabs>
-      <v-spacer />
+    <v-app-bar flat height="68">
+      <v-app-bar-title>
+        <div v-if="title" class="text-h4">{{ title }}</div>
+        <div v-if="subtitle" class="text-subtitle-1">{{ subtitle }}</div>
+      </v-app-bar-title>
+      <template #append>
+        <a href="https://epfl.ch" target="_blank">
+          <v-img :src="epflLogoUrl" width="100px" />
+        </a>
+      </template>
     </v-app-bar>
     <v-main>
       <RouterView />
