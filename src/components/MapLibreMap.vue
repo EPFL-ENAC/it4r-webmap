@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import 'maplibre-gl/dist/maplibre-gl.css'
 
+import { DivControl } from '@/utils/control'
 import {
   FullscreenControl,
   GeolocateControl,
   Map,
+  MapMouseEvent,
   NavigationControl,
   Popup,
   ScaleControl,
@@ -57,6 +59,21 @@ onMounted(() => {
   map.addControl(new GeolocateControl({}))
   map.addControl(new ScaleControl({}))
   map.addControl(new FullscreenControl({}))
+  const positionControl = new DivControl({ id: 'map-position' })
+  map.addControl(positionControl, 'bottom-left')
+
+  map.on('mousemove', function (event: MapMouseEvent) {
+    if (positionControl.container) {
+      positionControl.container.innerHTML = `Lat/Lon: (${event.lngLat.lat.toFixed(
+        4
+      )}; ${event.lngLat.lng.toFixed(4)})`
+    }
+  })
+  map.on('mouseout', function () {
+    if (positionControl.container) {
+      positionControl.container.innerHTML = ''
+    }
+  })
 
   map.once('load', () => {
     filterLayers()
