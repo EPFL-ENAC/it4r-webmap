@@ -77,8 +77,8 @@ onMounted(() => {
 
   map.once('load', () => {
     filterLayers()
+    loading.value = false
   })
-  loading.value = false
 })
 
 watch(
@@ -124,25 +124,29 @@ watch([() => props.selectableLayerIds, () => props.selectedLayerIds], () => filt
 })
 
 function update(center?: LngLatLike, zoom?: number) {
-  if (center !== undefined) {
-    map?.setCenter(center)
-  }
-  if (zoom !== undefined) {
-    map?.setZoom(zoom)
+  if (map) {
+    if (center !== undefined) {
+      map.setCenter(center)
+    }
+    if (zoom !== undefined) {
+      map.setZoom(zoom)
+    }
   }
 }
 
 function filterLayers() {
-  map
-    ?.getStyle()
-    .layers.filter((layer) => props.selectableLayerIds.includes(layer.id))
-    .forEach((layer) => {
-      map?.setLayoutProperty(
-        layer.id,
-        'visibility',
-        props.selectedLayerIds.includes(layer.id) ? 'visible' : 'none'
-      )
-    })
+  if (map?.loaded()) {
+    map
+      .getStyle()
+      .layers.filter((layer) => props.selectableLayerIds.includes(layer.id))
+      .forEach((layer) => {
+        map?.setLayoutProperty(
+          layer.id,
+          'visibility',
+          props.selectedLayerIds.includes(layer.id) ? 'visible' : 'none'
+        )
+      })
+  }
 }
 </script>
 
