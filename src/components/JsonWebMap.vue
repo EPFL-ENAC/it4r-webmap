@@ -51,6 +51,9 @@ watch(
         map.value?.update(data.center, data.zoom)
         title.value = data.title
         subtitle.value = data.subtitle
+        if (data.title) {
+          document.title = data.title
+        }
       })
   },
   { immediate: true }
