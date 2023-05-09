@@ -1,0 +1,32 @@
+{
+  "version": 8,
+  "name": "Default Style",
+  "sources": {
+    "osm": {
+      "type": "raster",
+      "tiles": ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+      "tileSize": 256,
+      "minzoom": 0,
+      "maxzoom": 19
+    },
+    "pneuma": {
+      "type": "vector",
+      "tiles": ["https://enacit4r-cdn.epfl.ch/pneuma/2023-04-24/tiles/{z}/{x}/{y}.pbf"],
+      "minZoom": 16,
+      "maxZoom": 24
+    }
+  },
+  "layers": [
+    { "id": "osm", "type": "raster", "source": "osm" },
+    {
+      "id": "pneuma",
+      "type": "circle",
+      "source": "pneuma",
+      "source-layer": "data",
+      "paint": {
+        "circle-color": "rgba(57, 157, 50, 1)",
+        "circle-radius": 2
+      }
+    }
+  ]
+}

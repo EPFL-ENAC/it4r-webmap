@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/EPFL-ENAC/it4r-webmap/main/schema/parameters.schema.json",
+  "center": { "lat": 37.991496, "lng": 23.732299 },
+  "zoom": 12,
+  "selectableItems": [
+    {
+      "label": "OSM",
+      "legend": "Open Street Map",
+      "ids": ["osm"],
+      "selected": true
+    },
+    {
+      "label": "Pneuma",
+      "ids": ["pneuma"],
+      "selected": true
+    }
+  ],
+  "title": "Map Title",
+  "subtitle": "Map Subtitle"
+}
