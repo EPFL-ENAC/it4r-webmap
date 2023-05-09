@@ -31,16 +31,12 @@ const selectableLayerIds = computed<string[]>(() => singleItems.value.flatMap((i
 const legendItems = computed(() =>
   singleItems.value
     .filter((item) => selectedLayerIds.value.some((id) => item.ids.includes(id)))
-    .flatMap((item) =>
-      item.legend !== undefined
-        ? [
-            {
-              label: item.label,
-              legend: item.legend
-            }
-          ]
-        : []
-    )
+    .filter((item) => item.legend !== undefined || item.legendImage !== undefined)
+    .map((item) => ({
+      label: item.label,
+      legend: item.legend,
+      legendImage: item.legendImage
+    }))
 )
 
 watch(
@@ -82,7 +78,8 @@ watch(
             <v-row>
               <v-col v-for="(item, index) in legendItems" :key="index" cols="12">
                 <h3>{{ item.label }}</h3>
-                <div>{{ item.legend }}</div>
+                <div v-if="item.legend">{{ item.legend }}</div>
+                <v-img v-if="item.legendImage" :src="item.legendImage" />
               </v-col>
             </v-row>
           </v-card-text>
