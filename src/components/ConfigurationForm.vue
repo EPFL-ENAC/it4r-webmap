@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useConfigurationStore } from '@/stores/configuration.js'
+import { useConfigurationStore } from '@/stores/configuration'
 import { storeToRefs } from 'pinia'
 
 const rules = {

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ConfigurationForm from '@/components/ConfigurationForm.vue'
 import LayerSelector from '@/components/LayerSelector.vue'
 import MapLibreMap from '@/components/MapLibreMap.vue'
 import { useTitleStore } from '@/stores/title'
@@ -8,7 +9,6 @@ import { mdiChevronLeft, mdiChevronRight, mdiCog, mdiLayers, mdiMapLegend } from
 import axios from 'axios'
 import { storeToRefs } from 'pinia'
 import { computed, ref, shallowRef, triggerRef, watch } from 'vue'
-import ConfigurationForm from './ConfigurationForm.vue'
 
 const props = defineProps<{
   styleUrl: string
