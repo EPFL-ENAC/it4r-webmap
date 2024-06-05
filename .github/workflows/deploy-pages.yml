@@ -26,6 +26,7 @@ jobs:
         with:
           node-version: 'lts/*'
           cache: 'npm'
+      - run: npm install
       - run: npm run build
       - uses: actions/configure-pages@v3
       - uses: actions/upload-pages-artifact@v1
