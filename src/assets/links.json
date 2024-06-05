@@ -1,0 +1,27 @@
+[
+  {
+    "title": "EPFL",
+    "caption": "epfl.ch",
+    "icon": "school",
+    "link": "https://epfl.ch"
+  },
+  {
+    "title": "EPFL Lab",
+    "caption": "epfl.ch/labs/some-lab",
+    "icon": "engineering",
+    "link": "https://www.epfl.ch/labs/some-lab"
+  },
+  {
+    "title": "ENAC IT4R",
+    "caption": "go.epfl.ch/it4r",
+    "icon": "construction",
+    "contribution": "it4r_contrib",
+    "link": "https://www.epfl.ch/schools/enac/about/data-at-enac/enac-it4research/"
+  },
+  {
+    "title": "source_code",
+    "caption": "EPFL-ENAC/it4r-webmap",
+    "icon": "code",
+    "link": "https://github.com/EPFL-ENAC/it4r-webmap"
+  }
+]

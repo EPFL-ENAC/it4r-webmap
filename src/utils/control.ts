@@ -14,7 +14,8 @@ export class DivControl implements IControl {
 
   onAdd() {
     this.container = document.createElement('div')
-    this.container.className = 'px-3 py-1'
+    this.container.style.marginLeft = '10px'
+    this.container.style.marginBottom = '10px'
     this.container.id = this.options.id
     return this.container
   }

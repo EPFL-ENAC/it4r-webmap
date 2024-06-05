@@ -1,0 +1,25 @@
+// app global css in SCSS form
+a {
+  text-decoration: none;
+  color: black;
+}
+
+a.q-markdown--link,
+a.epfl {
+  text-decoration: underline;
+  text-decoration-color: red;
+  text-decoration-thickness: min(0.08em, 0.1rem);
+  text-underline-offset: 0.14em;
+  color: black;
+}
+
+a:hover.q-markdown--link,
+a:hover.epfl {
+  text-decoration: underline;
+  text-decoration-color: black;
+  color: red;
+}
+
+.text-caption {
+  letter-spacing: normal;
+}

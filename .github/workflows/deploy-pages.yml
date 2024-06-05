@@ -26,11 +26,10 @@ jobs:
         with:
           node-version: 'lts/*'
           cache: 'npm'
-      - run: npm ci
       - run: npm run build
       - uses: actions/configure-pages@v3
       - uses: actions/upload-pages-artifact@v1
         with:
-          path: './dist'
+          path: './dist/spa'
       - id: deployment
         uses: actions/deploy-pages@v1
