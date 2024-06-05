@@ -1,17 +1,8 @@
 <template>
   <q-page class="q-pa-md">
     <div class="text-h6 q-mb-md">Page 1</div>
-    <div class="text-bold">
-      
-    </div>
-
     <div class="q-mt-md q-mb-md">
-      <q-markdown no-heading-anchor-links>
-### Style and identity
-
-* [Quasar: Style and identity](https://quasar.dev/docs)
-* [EPFL brand identity guidelines](https://inside.epfl.ch/corp-id/en/brand-identity-guidelines/)
-      </q-markdown>
+      <q-markdown no-heading-anchor-links :src="stylingMd" />
     </div>
     <div class="row q-gutter-md">
       <q-btn label="primary" color="primary" />
@@ -37,6 +28,11 @@
 
 <script setup lang="ts">
 const ReadmeMd = 'https://raw.githubusercontent.com/EPFL-ENAC/it4r-webmap/main/README.md'
+
+const stylingMd = `### Style and identity
+* [Quasar: Style and identity](https://quasar.dev/docs)
+* [EPFL brand identity guidelines](https://inside.epfl.ch/corp-id/en/brand-identity-guidelines/)
+`;
 
 const content = ref();
 
