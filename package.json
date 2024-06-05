@@ -1,8 +1,8 @@
 {
-  "name": "it4rwebmap",
+  "name": "it4r-webmap",
   "version": "0.0.1",
-  "description": "Some app template",
-  "productName": "Some App",
+  "description": "IT4R webmap template",
+  "productName": "IT4R App",
   "author": "ENAC IT4R <enacit4research@epfl.ch>",
   "private": true,
   "scripts": {

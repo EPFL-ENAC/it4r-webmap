@@ -8,7 +8,6 @@ export default {
   it4r_contrib: 'UI/UX design, application development and deployment',
   layer: {
     earthquakes: 'Earthquakes',
-    other: 'Other',
   },
   layers: 'Layers',
   home: 'Home',

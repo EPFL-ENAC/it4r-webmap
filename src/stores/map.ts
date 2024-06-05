@@ -13,7 +13,6 @@ export const useMapStore = defineStore('map', () => {
 
   const layers: LayerSelection[] = [
     { id: 'earthquakes', selected: true },
-    { id: 'other', selected: true },
   ];
 
   function toggleLayer(id: string) {
