@@ -77,6 +77,11 @@ module.exports = configure(function (/* ctx */) {
       // distDir
 
       // extendViteConf (viteConf) {},
+      // Needed to have relative assets in the index.html
+      // https://github.com/quasarframework/quasar/issues/8513#issuecomment-1127654470
+      extendViteConf(viteConf, { isServer, isClient }) {
+        viteConf.base = '';
+      },
       // viteVuePluginOptions: {},
 
       vitePlugins: [
