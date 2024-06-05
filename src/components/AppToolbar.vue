@@ -1,7 +1,7 @@
 <template>
   <q-toolbar>
     <q-btn
-      v-if="$q.screen.lt.md"
+      v-if="$q.screen.lt.md && !noMenu"
       flat
       dense
       round
@@ -20,13 +20,13 @@
         exact
       />
       <q-route-tab
-        :label="$t('page1')"
-        to="/page1"
+        :label="$t('Page1')"
+        to="/page/1"
         exact
       />
       <q-route-tab
-        :label="$t('page2')"
-        to="/page2"
+        :label="$t('Page2')"
+        to="/page/2"
         exact
       />
     </q-tabs>
@@ -60,14 +60,14 @@
               <q-item-label>{{ $t('home') }}</q-item-label>
             </q-item-section>
           </q-item>
-          <q-item v-if="$q.screen.lt.sm" clickable v-close-popup to="/page1">
+          <q-item v-if="$q.screen.lt.sm" clickable v-close-popup to="/page/1">
             <q-item-section>
-              <q-item-label>{{ $t('page1') }}</q-item-label>
+              <q-item-label>{{ $t('Page1') }}</q-item-label>
             </q-item-section>
           </q-item>
-          <q-item v-if="$q.screen.lt.sm" clickable v-close-popup to="/page2">
+          <q-item v-if="$q.screen.lt.sm" clickable v-close-popup to="/page/2">
             <q-item-section>
-              <q-item-label>{{ $t('page2') }}</q-item-label>
+              <q-item-label>{{ $t('Page2') }}</q-item-label>
             </q-item-section>
           </q-item>
           <q-separator v-if="$q.screen.lt.sm" />
@@ -124,6 +124,13 @@ import essentialLinks from 'src/assets/links.json';
 import EssentialLink from 'src/components/EssentialLink.vue';
 import SimpleDialog from 'src/components/SimpleDialog.vue';
 
+interface Props {
+  noMenu?: boolean;
+}
+
+withDefaults(defineProps<Props>(), {
+  noMenu: false,
+});
 const emit = defineEmits(['toggle']);
 
 const showIntro = ref(false);

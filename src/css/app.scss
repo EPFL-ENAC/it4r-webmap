@@ -23,3 +23,7 @@ a:hover.epfl {
 .text-caption {
   letter-spacing: normal;
 }
+
+li + li {
+  margin-top: 10px;
+}
