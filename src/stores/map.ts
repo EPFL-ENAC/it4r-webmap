@@ -8,7 +8,8 @@ export type LayerSelection = {
 }
 
 export type FilterParams = {
-  magnitudes: [number, number] 
+  magnitudes: [number, number]
+  tsunami: boolean | null
 }
 
 export const useMapStore = defineStore('map', () => {
@@ -36,7 +37,7 @@ export const useMapStore = defineStore('map', () => {
   function applyFilters(filters: FilterParams) {
     if (!map.value) return;
     if (findLayer('earthquakes')?.visible)
-      filterEarthquakes(map.value, filters.magnitudes);
+      filterEarthquakes(map.value, filters.magnitudes, filters.tsunami);
   }
 
   function initLayers(mapInstance: Map) {

@@ -138,9 +138,15 @@ export function toggleEarthquakesLayers(map: Map, visible: boolean) {
   });
 }
 
-export function filterEarthquakes(map: Map, magnitudes: [number, number]) {
+export function filterEarthquakes(map: Map, magnitudes: [number, number], tsunami: boolean | null) {
   if (!earthquakesData) return;
-  const filteredFeatures = earthquakesData.features.filter((feature: Feature) => feature.properties.mag >= magnitudes[0] && feature.properties.mag <= magnitudes[1]);
+  const filteredFeatures = earthquakesData.features.filter((feature: Feature) => {
+    let filtered = feature.properties.mag >= magnitudes[0] && feature.properties.mag <= magnitudes[1];
+    if (filtered && tsunami !== null) {
+      filtered = tsunami ? feature.properties.tsunami === 1 : feature.properties.tsunami === 0;
+    }
+    return filtered;
+  });
   const filteredData = {
     ...earthquakesData,
     features: filteredFeatures

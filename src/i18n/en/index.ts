@@ -18,4 +18,5 @@ export default {
   number_of_earthquakes: 'Number of earthquakes',
   resources: 'Resources',
   source_code: 'Source Code',
+  with_tsunami: 'With tsunami'
 };

@@ -40,13 +40,19 @@
           label
           snap
           color="primary"
-          @change="onMagnitudesFilter"
+          @change="onUpdatedFilter"
         />
         <span class="text-help">{{ $t('magnitudes_help') }}</span>
       </q-item-section>
     </q-item>
+    <q-item
+      class="q-pl-sm q-pr-sm">
+      <q-item-section>
+        <q-toggle keep-color toggle-indeterminate v-model="tsunami" color="primary" :label="$t('with_tsunami')" @update:model-value="onUpdatedFilter" />
+      </q-item-section>
+    </q-item>
     <q-item-label header class="text-h6">
-      <q-icon name="filter_alt" class="q-pb-xs"/>
+      <q-icon name="info" class="q-pb-xs"/>
       <span class="q-ml-sm">{{ $t('legends') }}</span>
     </q-item-label>
     <q-item-label>
@@ -72,6 +78,7 @@ const mapStore = useMapStore();
 const helpStore = useHelpStore();
 
 const magnitudes = ref({ min: 1, max: 10 });
+const tsunami = ref(null);
 
 const clusterColors = [
   {
@@ -88,9 +95,10 @@ const clusterColors = [
   }
 ]
 
-function onMagnitudesFilter() {
+function onUpdatedFilter() {
   mapStore.applyFilters({
-    magnitudes: [magnitudes.value.min, magnitudes.value.max]
+    magnitudes: [magnitudes.value.min, magnitudes.value.max],
+    tsunami: tsunami.value
   })
 }
 </script>
