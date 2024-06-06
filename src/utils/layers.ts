@@ -119,9 +119,13 @@ export function appendEarthquakesLayers(map: Map) {
   });
 }
 
-export function removeEarthquakesLayers(map: Map) {
-  map.removeLayer('earthquakes-clusters');
-  map.removeLayer('earthquakes-cluster-count');
-  map.removeLayer('earthquakes-unclustered-point');
-  map.removeSource('earthquakes');
+export function toggleEarthquakesLayers(map: Map, visible: boolean) {
+  const visibility = visible ? 'visible' : 'none';
+  ['earthquakes-clusters', 'earthquakes-cluster-count', 'earthquakes-unclustered-point'].forEach(id => {
+    map.setLayoutProperty(
+        id,
+        'visibility',
+        visibility
+      )
+    });
 }
