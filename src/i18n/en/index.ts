@@ -10,8 +10,12 @@ export default {
     earthquakes: 'Earthquakes',
   },
   layers: 'Layers',
+  legends: 'Legends',
   home: 'Home',
   introduction: 'Introduction',
+  magnitudes: 'Magnitudes',
+  magnitudes_help: 'Select the range of magnitudes.',
+  number_of_earthquakes: 'Number of earthquakes',
   resources: 'Resources',
   source_code: 'Source Code',
 };

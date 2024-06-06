@@ -31,6 +31,7 @@
     <q-drawer
       v-model="helpStore.show"
       side="right"
+      :width="$q.screen.lt.md ? 300 : 500"
       overlay elevated>
       <help-drawer />
       <div

@@ -7,7 +7,7 @@
     <q-item
       v-for="layer in mapStore.layers"
       :key="layer.id"
-      class="q-pl-sm"
+      class="q-pl-sm q-pr-sm"
     >
       <q-item-section>
         <q-checkbox
@@ -27,7 +27,37 @@
     </q-item>
     <q-item-label header class="text-h6">
       <q-icon name="filter_alt" class="q-pb-xs"/>
-      <span class="q-ml-sm">{{ $t('Filters') }}</span></q-item-label>
+      <span class="q-ml-sm">{{ $t('filters') }}</span>
+    </q-item-label>
+    <q-item>
+      <q-item-section>
+        <span>{{ $t('magnitudes') }}</span>
+        <q-range
+          v-model="magnitudes"
+          :min="1"
+          :max="10"
+          :step="1"
+          label
+          snap
+          color="primary"
+          @change="onMagnitudesFilter"
+        />
+        <span class="text-help">{{ $t('magnitudes_help') }}</span>
+      </q-item-section>
+    </q-item>
+    <q-item-label header class="text-h6">
+      <q-icon name="filter_alt" class="q-pb-xs"/>
+      <span class="q-ml-sm">{{ $t('legends') }}</span>
+    </q-item-label>
+    <q-item-label>
+      <span class="q-ml-md">{{ $t('number_of_earthquakes') }}</span>
+    </q-item-label>
+    <q-item v-for="cluster in clusterColors" :key="cluster.color">
+        <q-item-section avatar>
+          <q-avatar :color="cluster.color" text-color="black" />
+        </q-item-section>
+        <q-item-section>{{ $t(cluster.label) }}</q-item-section>
+      </q-item>
   </q-list>
 </template>
 
@@ -38,6 +68,27 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-const mapStore = useMapStore()
-const helpStore = useHelpStore()
+const mapStore = useMapStore();
+const helpStore = useHelpStore();
+
+const magnitudes = ref({ min: 1, max: 10 });
+
+const clusterColors = [
+  {
+    color: 'cyan-5',
+    label: '< 100'
+  },  
+  {
+    color: 'yellow-6',
+    label: '100 - 750'
+  },
+  {
+    color: 'pink-3',
+    label: '> 750'
+  }
+]
+
+function onMagnitudesFilter() {
+  console.log(magnitudes.value);
+}
 </script>

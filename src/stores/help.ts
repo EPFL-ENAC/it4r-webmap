@@ -10,7 +10,7 @@ export const useHelpStore = defineStore('help', () => {
       show.value = !show.value;
     } else {
       current.value = name;
-      const response = await fetch(`/${name}.md`);
+      const response = await fetch(`${name}.md`);
       content.value = await response.text();
       show.value = true;
     }
