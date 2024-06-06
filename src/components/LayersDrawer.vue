@@ -89,6 +89,8 @@ const clusterColors = [
 ]
 
 function onMagnitudesFilter() {
-  console.log(magnitudes.value);
+  mapStore.applyFilters({
+    magnitudes: [magnitudes.value.min, magnitudes.value.max]
+  })
 }
 </script>

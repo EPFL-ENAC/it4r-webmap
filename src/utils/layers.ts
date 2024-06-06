@@ -1,11 +1,19 @@
-import { Map, Popup } from 'maplibre-gl';
+import { Feature, Map, Popup } from 'maplibre-gl';
+import { GeoJSON } from 'geojson';
 
-export function appendEarthquakesLayers(map: Map) {
+const GEOJSON_URL = 'https://maplibre.org/maplibre-gl-js/docs/assets/earthquakes.geojson';
+
+let earthquakesData: GeoJSON;
+
+export async function appendEarthquakesLayers(map: Map) {
+  const response = await fetch(GEOJSON_URL);
+  earthquakesData = await response.json() as GeoJSON;
+
   map.addSource('earthquakes', {
     type: 'geojson',
     // Point to GeoJSON data. This example visualizes all M1.0+ earthquakes
     // from 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
-    data: 'https://maplibre.org/maplibre-gl-js/docs/assets/earthquakes.geojson',
+    data: earthquakesData,
     cluster: true,
     clusterMaxZoom: 14, // Max zoom to cluster points on
     clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
@@ -74,7 +82,7 @@ export function appendEarthquakesLayers(map: Map) {
         layers: ['earthquakes-clusters']
     });
     const clusterId = features[0].properties.cluster_id;
-    const zoom = await map.getSource('earthquakes').getClusterExpansionZoom(clusterId);
+    const zoom = await map.getSource('earthquakes')?.getClusterExpansionZoom(clusterId);
     map.easeTo({
       center: features[0].geometry.coordinates,
       zoom
@@ -123,9 +131,19 @@ export function toggleEarthquakesLayers(map: Map, visible: boolean) {
   const visibility = visible ? 'visible' : 'none';
   ['earthquakes-clusters', 'earthquakes-cluster-count', 'earthquakes-unclustered-point'].forEach(id => {
     map.setLayoutProperty(
-        id,
-        'visibility',
-        visibility
-      )
-    });
+      id,
+      'visibility',
+      visibility
+    )
+  });
+}
+
+export function filterEarthquakes(map: Map, magnitudes: [number, number]) {
+  if (!earthquakesData) return;
+  const filteredFeatures = earthquakesData.features.filter((feature: Feature) => feature.properties.mag >= magnitudes[0] && feature.properties.mag <= magnitudes[1]);
+  const filteredData = {
+    ...earthquakesData,
+    features: filteredFeatures
+  }
+  map.getSource('earthquakes')?.setData(filteredData);
 }
