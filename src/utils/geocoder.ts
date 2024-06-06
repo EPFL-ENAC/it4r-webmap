@@ -1,14 +1,14 @@
 import { Feature, FeatureCollection } from 'geojson';
 
-// TODO have it in the parameters
-const countryCode = 'ch'
-const viewBox = '5.80,46.40,6.25,46.10'
+// restrict by country code and/or view box
+const countryCode = undefined //'ch'
+const viewBox = undefined // '5.80,46.40,6.25,46.10'
 
 function handleNominatimResponse(geojson: FeatureCollection): Feature[] {
   const features = []
   const place_names: string[] = []
-  for (const feature of geojson.features.filter((f: Feature) => f.properties.address.country_code === countryCode)) {
-    if (!place_names.includes(feature.properties.display_name)) {
+  for (const feature of geojson.features.filter((f: Feature) => countryCode === undefined || f.properties?.address.country_code === countryCode)) {
+    if (feature.properties && feature.bbox && !place_names.includes(feature.properties.display_name)) {
       const center = [
         feature.bbox[0] + (feature.bbox[2] - feature.bbox[0]) / 2,
         feature.bbox[1] + (feature.bbox[3] - feature.bbox[1]) / 2,
@@ -24,12 +24,12 @@ function handleNominatimResponse(geojson: FeatureCollection): Feature[] {
         text: feature.properties.display_name,
         place_type: ['place'],
         center,
-      }
+      } as Feature;
       place_names.push(feature.properties.display_name)
       features.push(point)
     }
   }
-  return features
+  return features;
 }
 
 let searchController: AbortController
@@ -42,12 +42,18 @@ let reverseController: AbortController
  */
 export const geocoderApi = {
   forwardGeocode: async (config: { query: string; limit: number; countries: string[] }) => {
-    let features = []
+    let features: Feature[] = []
     try {
-      let countrycodes = countryCode
+      let countrycodes: string | undefined = countryCode
       if (config.countries && config.countries.length > 0)
         countrycodes = config.countries.join(',')
-      const request = `https://nominatim.openstreetmap.org/search?q=${config.query}&limit=${config.limit}&format=geojson&polygon_geojson=1&addressdetails=1&countrycodes=${countrycodes}&bounded=1&viewbox=${viewBox}`
+      let request = `https://nominatim.openstreetmap.org/search?q=${config.query}&limit=${config.limit}&format=geojson&polygon_geojson=1&addressdetails=1&bounded=1`;
+      if (countrycodes) {
+        request = `${request}&countrycodes=${countrycodes}`
+      }
+      if (viewBox) {
+        request = `${request}&viewbox=${viewBox}`
+      }
       if (searchController)
         searchController.abort()
       searchController = new AbortController()
@@ -65,7 +71,7 @@ export const geocoderApi = {
     }
   },
   reverseGeocode: async (config: { query: { lat: number, long: number} }) => {
-    let features = []
+    let features: Feature[] = []
     try {
       if (reverseController)
         reverseController.abort()
