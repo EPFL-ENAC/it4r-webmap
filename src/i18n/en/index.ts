@@ -16,6 +16,7 @@ export default {
   magnitudes: 'Magnitudes',
   magnitudes_help: 'Select the range of magnitudes.',
   number_of_earthquakes: 'Number of earthquakes',
+  reset_filters: 'Reset filters',
   resources: 'Resources',
   source_code: 'Source Code',
   with_tsunami: 'With tsunami'

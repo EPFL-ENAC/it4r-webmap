@@ -1,15 +1,12 @@
 import { defineStore } from 'pinia';
 import { appendEarthquakesLayers, toggleEarthquakesLayers, filterEarthquakes } from 'src/utils/layers';
 import { Map } from 'maplibre-gl';
+import { FilterParams } from 'src/stores/filters';
+import P from 'app/dist/spa/assets/PageOne.d985d06c';
 
 export type LayerSelection = {
   id: string;
   visible: boolean;
-}
-
-export type FilterParams = {
-  magnitudes: [number, number]
-  tsunami: boolean | null
 }
 
 export const useMapStore = defineStore('map', () => {
@@ -40,13 +37,16 @@ export const useMapStore = defineStore('map', () => {
       filterEarthquakes(map.value, filters.magnitudes, filters.tsunami);
   }
 
-  function initLayers(mapInstance: Map) {
+  async function initLayers(mapInstance: Map) {
     map.value = mapInstance;
-    layers.forEach((layer) => {
-      if (layer.id === 'earthquakes') {
-        appendEarthquakesLayers(mapInstance);
-      }
-    });
+    return Promise.all(
+      layers.map((layer) => {
+        if (layer.id === 'earthquakes') {
+          return appendEarthquakesLayers(mapInstance);
+        }
+        return Promise.resolve();
+      })
+    );
   }
 
   return {

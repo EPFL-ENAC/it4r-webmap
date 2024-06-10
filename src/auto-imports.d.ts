@@ -76,6 +76,7 @@ declare global {
   const useCounterStore: typeof import('./stores/help')['useCounterStore']
   const useCssModule: typeof import('vue')['useCssModule']
   const useCssVars: typeof import('vue')['useCssVars']
+  const useFiltersStore: typeof import('./stores/filters')['useFiltersStore']
   const useHelpStore: typeof import('./stores/help')['useHelpStore']
   const useI18n: typeof import('vue-i18n')['useI18n']
   const useLink: typeof import('vue-router')['useLink']
@@ -168,6 +169,7 @@ declare module 'vue' {
     readonly useAttrs: UnwrapRef<typeof import('vue')['useAttrs']>
     readonly useCssModule: UnwrapRef<typeof import('vue')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('vue')['useCssVars']>
+    readonly useFiltersStore: UnwrapRef<typeof import('./stores/filters')['useFiltersStore']>
     readonly useHelpStore: UnwrapRef<typeof import('./stores/help')['useHelpStore']>
     readonly useI18n: UnwrapRef<typeof import('vue-i18n')['useI18n']>
     readonly useLink: UnwrapRef<typeof import('vue-router')['useLink']>
@@ -253,6 +255,7 @@ declare module '@vue/runtime-core' {
     readonly useAttrs: UnwrapRef<typeof import('vue')['useAttrs']>
     readonly useCssModule: UnwrapRef<typeof import('vue')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('vue')['useCssVars']>
+    readonly useFiltersStore: UnwrapRef<typeof import('./stores/filters')['useFiltersStore']>
     readonly useHelpStore: UnwrapRef<typeof import('./stores/help')['useHelpStore']>
     readonly useI18n: UnwrapRef<typeof import('vue-i18n')['useI18n']>
     readonly useLink: UnwrapRef<typeof import('vue-router')['useLink']>

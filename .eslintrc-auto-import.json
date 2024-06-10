@@ -92,6 +92,7 @@
     "watchSyncEffect": true,
     "useMapStore": true,
     "helpStore": true,
-    "useHelpStore": true
+    "useHelpStore": true,
+    "useFiltersStore": true
   }
 }
