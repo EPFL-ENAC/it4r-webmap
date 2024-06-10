@@ -2,7 +2,6 @@ import { defineStore } from 'pinia';
 import { appendEarthquakesLayers, toggleEarthquakesLayers, filterEarthquakes } from 'src/utils/layers';
 import { Map } from 'maplibre-gl';
 import { FilterParams } from 'src/stores/filters';
-import P from 'app/dist/spa/assets/PageOne.d985d06c';
 
 export type LayerSelection = {
   id: string;
