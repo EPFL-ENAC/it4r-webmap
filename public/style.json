@@ -23,7 +23,8 @@
       "paint": {
         "raster-saturation": -0.9,
         "raster-brightness-min": 0.7
-      }
+      },
+      "layout": { "visibility": "visible" }
     },
     { "id": "dark",
       "type": "raster",
