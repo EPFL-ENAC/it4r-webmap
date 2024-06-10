@@ -13,7 +13,7 @@
         <q-checkbox
           v-model="layer.visible"
           :label="$t(`layer.${layer.id}`)" 
-          @click="mapStore.toggleLayer(layer.id)"
+          @click="onToggleLayer(layer.id)"
         />
       </q-item-section>
       <q-item-section avatar>
@@ -103,6 +103,11 @@ const clusterColors = [
     label: '> 750'
   }
 ]
+
+function onToggleLayer(layerId: string) {
+  mapStore.toggleLayer(layerId);
+  onUpdatedFilter();
+}
 
 function onResetFilters() {
   filtersStore.reset();
