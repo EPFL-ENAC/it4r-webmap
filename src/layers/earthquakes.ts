@@ -1,5 +1,5 @@
-import { Feature, Map, Popup, GeoJSONSource } from 'maplibre-gl';
-import { GeoJSON } from 'geojson';
+import { Map, Popup, GeoJSONSource } from 'maplibre-gl';
+import { Feature, FeatureCollection, GeoJSON, GeoJsonProperties, Geometry, Point, Position } from 'geojson';
 import { LayerManager } from 'src/layers/models';
 import { FilterParams } from 'src/stores/filters';
 
@@ -7,7 +7,7 @@ const GEOJSON_URL = 'https://maplibre.org/maplibre-gl-js/docs/assets/earthquakes
 
 export class EarthquakesLayerManager extends LayerManager<FilterParams> {
 
-  earthquakesData: GeoJSON | null = null;
+  earthquakesData: FeatureCollection | null = null;
 
   getId(): string {
     return 'earthquakes';
@@ -15,7 +15,7 @@ export class EarthquakesLayerManager extends LayerManager<FilterParams> {
 
   async append(map: Map): Promise<void> {
     const response = await fetch(GEOJSON_URL);
-    this.earthquakesData = await response.json() as GeoJSON;
+    this.earthquakesData = await response.json() as FeatureCollection;
 
     map.addSource('earthquakes', {
       type: 'geojson',
@@ -92,7 +92,7 @@ export class EarthquakesLayerManager extends LayerManager<FilterParams> {
       const clusterId = features[0].properties.cluster_id;
       const zoom = await (map.getSource('earthquakes') as GeoJSONSource).getClusterExpansionZoom(clusterId);
       map.easeTo({
-        center: features[0].geometry.coordinates,
+        center: (features[0].geometry as Point).coordinates as [number, number],
         zoom
       });
     });
@@ -102,11 +102,12 @@ export class EarthquakesLayerManager extends LayerManager<FilterParams> {
     // the location of the feature, with
     // description HTML from its properties.
     map.on('click', 'earthquakes-unclustered-point', (e) => {
-      const coordinates = e.features[0].geometry.coordinates.slice();
-      const mag = e.features[0].properties.mag;
+      const feature = e.features ? e.features[0] : null;
+      if (!feature) return;
+      const mag = feature.properties
       let tsunami;
 
-      if (e.features[0].properties.tsunami === 1) {
+      if (feature.properties.tsunami === 1) {
         tsunami = 'yes';
       } else {
         tsunami = 'no';
@@ -115,6 +116,7 @@ export class EarthquakesLayerManager extends LayerManager<FilterParams> {
       // Ensure that if the map is zoomed out such that
       // multiple copies of the feature are visible, the
       // popup appears over the copy being pointed to.
+      const coordinates = (feature.geometry as Point).coordinates.slice() as [number, number];
       while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
         coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
       }
@@ -148,10 +150,10 @@ export class EarthquakesLayerManager extends LayerManager<FilterParams> {
 
   filter(map: Map, filter: FilterParams): void {
     if (!this.earthquakesData) return;
-    const filteredFeatures = this.earthquakesData.features.filter((feature: Feature) => {
-      let filtered = feature.properties.mag >= filter.magnitudes[0] && feature.properties.mag <= filter.magnitudes[1];
+    const filteredFeatures = this.earthquakesData.features.filter((feature: Feature<Geometry, GeoJsonProperties>) => {
+      let filtered = feature.properties?.mag >= filter.magnitudes[0] && feature.properties?.mag <= filter.magnitudes[1];
       if (filtered && filter.tsunami !== null) {
-        filtered = filter.tsunami ? feature.properties.tsunami === 1 : feature.properties.tsunami === 0;
+        filtered = filter.tsunami ? feature.properties?.tsunami === 1 : feature.properties?.tsunami === 0;
       }
       return filtered;
     });
