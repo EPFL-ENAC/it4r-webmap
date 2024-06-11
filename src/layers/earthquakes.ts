@@ -78,7 +78,7 @@ export class EarthquakesLayerManager extends LayerManager<FilterParams> {
       filter: ['!', ['has', 'point_count']],
       paint: {
         'circle-color': '#11b4da',
-        'circle-radius': 4,
+        'circle-radius': 5,
         'circle-stroke-width': 1,
         'circle-stroke-color': '#fff'
       }
@@ -104,7 +104,7 @@ export class EarthquakesLayerManager extends LayerManager<FilterParams> {
     map.on('click', 'earthquakes-unclustered-point', (e) => {
       const feature = e.features ? e.features[0] : null;
       if (!feature) return;
-      const mag = feature.properties
+      const mag = feature.properties.mag;
       let tsunami;
 
       if (feature.properties.tsunami === 1) {
