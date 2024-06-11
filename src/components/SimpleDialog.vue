@@ -13,7 +13,7 @@
         </div>
         <slot></slot>
       </q-card-section>
-      <q-card-actions v-if="$q.screen.gt.sm" align="right">
+      <q-card-actions v-if="$q.screen.gt.xs" align="right">
         <q-btn flat :label="$t('close')" color="primary" v-close-popup />
       </q-card-actions>
     </q-card>
