@@ -1,5 +1,5 @@
 import { Map, Popup, GeoJSONSource } from 'maplibre-gl';
-import { Feature, FeatureCollection, GeoJSON, GeoJsonProperties, Geometry, Point, Position } from 'geojson';
+import { Feature, FeatureCollection, GeoJSON, GeoJsonProperties, Geometry, Point } from 'geojson';
 import { LayerManager } from 'src/layers/models';
 import { FilterParams } from 'src/stores/filters';
 
