@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { appendEarthquakesLayers, toggleEarthquakesLayers, filterEarthquakes } from 'src/utils/layers';
+import { EarthquakesLayerManager } from 'src/layers/earthquakes';
 import { Map } from 'maplibre-gl';
 import { FilterParams } from 'src/stores/filters';
 
@@ -12,47 +12,80 @@ export const useMapStore = defineStore('map', () => {
 
   const map = ref<Map>();
 
-  const layers: LayerSelection[] = [
-    { id: 'earthquakes', visible: true },
-  ];
+  const layerManagers = [new EarthquakesLayerManager()];
 
+  const layerSelections: LayerSelection[] = layerManagers.map(
+    (lm) => ({ id: lm.getId(), visible: true })
+  );
+
+  /**
+   * Find a layer selection state by its identifier.
+   * @param id the layer selection state
+   * @returns 
+   */
   function findLayer(id: string) {
-    return layers.find((l) => l.id === id);
+    return layerSelections.find((l) => l.id === id);
   }
 
-  function toggleLayer(id: string) {
+  /**
+   * Toggle the visibility of a layer.
+   * @param id the layer identifier
+   */
+  function applyLayerVisibility(id: string) {
     if (!map.value) return;
-    const layer = findLayer(id)
-    if (layer) {
-      if (id === 'earthquakes') {
-        toggleEarthquakesLayers(map.value, layer.visible);
-      }
+    const manager = getLayerManager(id);
+    const layer = findLayer(id);
+    if (manager && layer) {
+      manager.setVisible(map.value, layer.visible);
     }
   }
 
+  /**
+   * Apply the data filters to the layers.
+   * @param filters the data filters parameters
+   */
   function applyFilters(filters: FilterParams) {
     if (!map.value) return;
-    if (findLayer('earthquakes')?.visible)
-      filterEarthquakes(map.value, filters.magnitudes, filters.tsunami);
+    layerSelections.map((layer) => {
+      if (map.value && layer.visible) {
+        const manager = getLayerManager(layer.id);
+        if (manager) {
+          manager.filter(map.value, filters);
+        }
+      }
+    });
   }
 
+  /**
+   * Register the current map and initialize the layers for that map.
+   * @param mapInstance the map instance
+   * @returns 
+   */
   async function initLayers(mapInstance: Map) {
     map.value = mapInstance;
     return Promise.all(
-      layers.map((layer) => {
-        if (layer.id === 'earthquakes') {
-          return appendEarthquakesLayers(mapInstance);
-        }
-        return Promise.resolve();
+      layerSelections.map((layer) => {
+        const manager = getLayerManager(layer.id);
+        if (!manager) return Promise.resolve();
+        return manager.append(mapInstance);
       })
     );
   }
 
+  /**
+   * Get the layer manager by its identifier.
+   * @param id the layer identifier
+   * @returns 
+   */
+  function getLayerManager(id: string) {
+    return layerManagers.find((lm) => lm.getId() === id);
+  }
+
   return {
     map,
-    layers,
+    layerSelections,
     applyFilters,
-    toggleLayer,
+    applyLayerVisibility,
     initLayers,
   };
 

@@ -3,7 +3,7 @@
     <maplibre-map
       position
       geocoder
-      :zoom="4"
+      :zoom="2"
       @map:loaded="onMapLoaded"
       @map:click="onMapClick"  />
   </q-page>

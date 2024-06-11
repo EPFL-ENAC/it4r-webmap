@@ -5,7 +5,7 @@
       <span class="q-ml-sm">{{ $t('layers') }}</span>
     </q-item-label>
     <q-item
-      v-for="layer in mapStore.layers"
+      v-for="layer in mapStore.layerSelections"
       :key="layer.id"
       class="q-pl-sm q-pr-sm"
     >
@@ -105,7 +105,7 @@ const clusterColors = [
 ]
 
 function onToggleLayer(layerId: string) {
-  mapStore.toggleLayer(layerId);
+  mapStore.applyLayerVisibility(layerId);
   onUpdatedFilter();
 }
 
