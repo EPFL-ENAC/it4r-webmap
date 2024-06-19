@@ -4,7 +4,6 @@ const APP_COOKIE_NAME = '_settings';
 
 export type Settings = {
   intro_shown: boolean;
-  experiments_view: string;
   theme?: string;
 };
 
