@@ -10,7 +10,6 @@ export type Settings = {
 export function getSettings(): Settings {
   let settings: Settings = {
     intro_shown: false,
-    experiments_view: 'grid',
     theme: 'light',
   };
   const settingsSaved = LocalStorage.getItem(APP_COOKIE_NAME);
