@@ -93,6 +93,7 @@
     "useMapStore": true,
     "helpStore": true,
     "useHelpStore": true,
-    "useFiltersStore": true
+    "useFiltersStore": true,
+    "useSettingsStore": true
   }
 }

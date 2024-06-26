@@ -117,11 +117,11 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-import { getSettings, saveSettings } from 'src/utils/settings';
 import IntroductionMd from 'src/assets/introduction.md';
 import essentialLinks from 'src/assets/links.json';
 import EssentialLink from 'src/components/EssentialLink.vue';
 import SimpleDialog from 'src/components/SimpleDialog.vue';
+import { Settings } from 'src/stores/settings';
 
 interface Props {
   noMenu?: boolean;
@@ -132,15 +132,15 @@ withDefaults(defineProps<Props>(), {
 });
 const emit = defineEmits(['toggle']);
 
+const settingsStore = useSettingsStore();
+
 const showIntro = ref(false);
 const showResources = ref(false);
 
 onMounted(() => {
-  const settings = getSettings();
-  if (!settings.intro_shown) {
+  if (!settingsStore.settings?.intro_shown) {
     showIntro.value = true;
-    settings.intro_shown = true;
-    saveSettings(settings);
+    settingsStore.saveSettings({ intro_shown: true } as Settings);
   }
 });
 

@@ -18,11 +18,11 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-import 'maplibre-gl/dist/maplibre-gl.css'
-import '@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css'
-import 'maplibregl-theme-switcher/styles.css'
-import MaplibreGeocoder from '@maplibre/maplibre-gl-geocoder'
-import { ThemeSwitcherControl, ThemeDefinition } from 'maplibregl-theme-switcher'
+import 'maplibre-gl/dist/maplibre-gl.css';
+import '@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css';
+import 'maplibregl-theme-switcher/styles.css';
+import MaplibreGeocoder from '@maplibre/maplibre-gl-geocoder';
+import { ThemeSwitcherControl, ThemeDefinition } from 'maplibregl-theme-switcher';
 import {
   AttributionControl,
   FullscreenControl,
@@ -35,9 +35,9 @@ import {
   type LngLatLike,
   type StyleSpecification
 } from 'maplibre-gl';
-import { DivControl } from 'src/utils/control'
-import { geocoderApi } from 'src/utils/geocoder'
-import { getSettings, saveSettings } from 'src/utils/settings';
+import { DivControl } from 'src/utils/control';
+import { geocoderApi } from 'src/utils/geocoder';
+import { Settings } from 'src/stores/settings';
 
 interface Props {
   styleSpec: string | StyleSpecification | undefined
@@ -62,6 +62,8 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const emit = defineEmits(['map:loaded', 'map:click'])
+
+const settingsStore = useSettingsStore();
 
 const { locale } = useI18n({ useScope: 'global' });
 const DEFAULT_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>, <a href="https://www.epfl.ch/" target="_blank">EPFL</a>';
@@ -93,15 +95,13 @@ onMounted(() => {
   map.addControl(new ScaleControl());
   map.addControl(new FullscreenControl());
 
-  const settings = getSettings();
+  const settings = settingsStore.settings;
   map.addControl(new ThemeSwitcherControl(THEMES, {
     defaultStyle: settings.theme || DEFAULT_THEME,
     eventListeners: {
       onChange(event: MouseEvent, style) {
         // persist the last theme choice
-        const stgs = getSettings();
-        stgs.theme = style;
-        saveSettings(stgs);
+        settingsStore.saveSettings({ theme: style } as Settings);
         return false;
       },
     }
