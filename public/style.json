@@ -22,7 +22,7 @@
       "source": "osm",
       "paint": {
         "raster-saturation": -0.9,
-        "raster-brightness-min": 0.7
+        "raster-brightness-min": 0.5
       },
       "layout": { "visibility": "visible" }
     },
@@ -31,7 +31,7 @@
       "source": "osm",
       "paint": {
         "raster-saturation": -1,
-        "raster-brightness-max": 0.2
+        "raster-brightness-max": 0.4
       },
       "layout": { "visibility": "none" }
     }
