@@ -37,6 +37,9 @@ export default defineConfig((/* ctx */) => {
         node: 'node22',
       },
 
+      // GitHub Pages project site base path
+      publicPath: process.env.NODE_ENV === 'production' ? '/it4r-webmap/' : '/',
+
       typescript: {
         strict: true,
         vueShim: true,
@@ -50,7 +53,6 @@ export default defineConfig((/* ctx */) => {
 
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
-      // publicPath: '/',
       // analyze: true,
       // env: {},
       // rawDefine: {}
