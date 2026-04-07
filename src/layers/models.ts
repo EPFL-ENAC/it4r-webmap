@@ -1,7 +1,6 @@
-import { Map } from 'maplibre-gl';
+import { type Map } from 'maplibre-gl';
 
 export abstract class LayerManager<T> {
-  
   /**
    * Get the identifier of the managed layer.
    */
@@ -21,5 +20,4 @@ export abstract class LayerManager<T> {
    * Filter the layer.
    */
   abstract filter(map: Map, filter: T): void;
- 
 }

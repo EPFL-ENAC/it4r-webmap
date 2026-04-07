@@ -1,23 +1,28 @@
 <template>
-  <q-page class="row items-center justify-evenly">
-    <maplibre-map
-      position
-      geocoder
-      :zoom="2"
-      @map:loaded="onMapLoaded"
-      @map:click="onMapClick"  />
+  <q-page class="map-page">
+    <maplibre-map position geocoder :zoom="2" @map:loaded="onMapLoaded" @map:click="onMapClick" />
   </q-page>
 </template>
 
+<style scoped>
+.map-page {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  width: 100%;
+  height: 100%;
+}
+</style>
+
 <script setup lang="ts">
 import MaplibreMap from 'components/MaplibreMap.vue';
-import { Map, MapMouseEvent } from 'maplibre-gl';
+import type { Map, MapMouseEvent } from 'maplibre-gl';
 
 const mapStore = useMapStore();
 const filtersStore = useFiltersStore();
 
-function onMapLoaded(map: Map) {
-  mapStore.initLayers(map).then(() => {
+async function onMapLoaded(map: Map) {
+  await mapStore.initLayers(map).then(() => {
     mapStore.applyFilters(filtersStore.asParams());
   });
 }

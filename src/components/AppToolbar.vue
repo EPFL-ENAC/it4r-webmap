@@ -14,21 +14,9 @@
     </a>
     <span class="q-ml-md text-h6">{{ $t('app_title') }}</span>
     <q-tabs v-if="!$q.screen.lt.sm" shrink stretch active-color="primary" class="q-ml-md">
-      <q-route-tab
-        to="/"
-        :label="$t('home')"
-        exact
-      />
-      <q-route-tab
-        :label="$t('Page1')"
-        to="/page/1"
-        exact
-      />
-      <q-route-tab
-        :label="$t('Page2')"
-        to="/page/2"
-        exact
-      />
+      <q-route-tab to="/" :label="$t('home')" exact />
+      <q-route-tab :label="$t('Page1')" to="/page/1" exact />
+      <q-route-tab :label="$t('Page2')" to="/page/2" exact />
     </q-tabs>
     <q-space />
     <span v-if="!$q.screen.lt.md">
@@ -48,11 +36,7 @@
         class="on-left"
       ></q-btn>
     </span>
-    <q-btn 
-      v-if="$q.screen.lt.md"
-      flat
-      round
-      icon="more_vert">
+    <q-btn v-if="$q.screen.lt.md" flat round icon="more_vert">
       <q-popup-proxy>
         <q-list class="bg-white">
           <q-item v-if="$q.screen.lt.sm" clickable v-close-popup to="/">
@@ -85,29 +69,17 @@
       </q-popup-proxy>
     </q-btn>
     <a href="https://epfl.ch/" target="_blank" class="q-mt-sm">
-      <q-skeleton
-        style="height: 30px; width: 100px"
-        class="float-right q-mb-sm"/>
+      <q-skeleton style="height: 30px; width: 100px" class="float-right q-mb-sm" />
     </a>
   </q-toolbar>
 
-  <simple-dialog
-    v-model="showIntro"
-    :title="$t('app_title')"
-    :content="IntroductionMd"/>
+  <simple-dialog v-model="showIntro" :title="$t('app_title')" :content="IntroductionMd" />
 
-  <simple-dialog
-    v-model="showResources"
-    :title="$t('resources')">
+  <simple-dialog v-model="showResources" :title="$t('resources')">
     <q-list separator>
-      <essential-link
-        v-for="link in essentialLinks"
-        :key="link.title"
-        v-bind="link"
-      />
+      <essential-link v-for="link in essentialLinks" :key="link.title" v-bind="link" />
     </q-list>
   </simple-dialog>
-
 </template>
 
 <script lang="ts">
@@ -121,7 +93,7 @@ import IntroductionMd from 'src/assets/introduction.md';
 import essentialLinks from 'src/assets/links.json';
 import EssentialLink from 'src/components/EssentialLink.vue';
 import SimpleDialog from 'src/components/SimpleDialog.vue';
-import { Settings } from 'src/stores/settings';
+import { type Settings } from 'src/stores/settings';
 
 interface Props {
   noMenu?: boolean;

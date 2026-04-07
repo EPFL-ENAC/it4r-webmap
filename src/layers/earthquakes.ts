@@ -1,12 +1,19 @@
-import { Map, Popup, GeoJSONSource } from 'maplibre-gl';
-import { Feature, FeatureCollection, GeoJSON, GeoJsonProperties, Geometry, Point } from 'geojson';
+import type { Map, GeoJSONSource } from 'maplibre-gl';
+import { Popup } from 'maplibre-gl';
+import type {
+  Feature,
+  FeatureCollection,
+  GeoJSON,
+  GeoJsonProperties,
+  Geometry,
+  Point,
+} from 'geojson';
 import { LayerManager } from 'src/layers/models';
-import { FilterParams } from 'src/stores/filters';
+import type { FilterParams } from 'src/stores/filters';
 
 const GEOJSON_URL = 'https://maplibre.org/maplibre-gl-js/docs/assets/earthquakes.geojson';
 
 export class EarthquakesLayerManager extends LayerManager<FilterParams> {
-
   earthquakesData: FeatureCollection | null = null;
 
   getId(): string {
@@ -15,7 +22,7 @@ export class EarthquakesLayerManager extends LayerManager<FilterParams> {
 
   async append(map: Map): Promise<void> {
     const response = await fetch(GEOJSON_URL);
-    this.earthquakesData = await response.json() as FeatureCollection;
+    this.earthquakesData = (await response.json()) as FeatureCollection;
 
     map.addSource('earthquakes', {
       type: 'geojson',
@@ -24,7 +31,7 @@ export class EarthquakesLayerManager extends LayerManager<FilterParams> {
       data: this.earthquakesData,
       cluster: true,
       clusterMaxZoom: 14, // Max zoom to cluster points on
-      clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
+      clusterRadius: 50, // Radius of each cluster when clustering points (defaults to 50)
     });
 
     map.addLayer({
@@ -38,25 +45,9 @@ export class EarthquakesLayerManager extends LayerManager<FilterParams> {
         //   * Blue, 20px circles when point count is less than 100
         //   * Yellow, 30px circles when point count is between 100 and 750
         //   * Pink, 40px circles when point count is greater than or equal to 750
-        'circle-color': [
-          'step',
-          ['get', 'point_count'],
-          '#51bbd6',
-          100,
-          '#f1f075',
-          750,
-          '#f28cb1'
-        ],
-        'circle-radius': [
-          'step',
-          ['get', 'point_count'],
-          20,
-          100,
-          30,
-          750,
-          40
-        ]
-      }
+        'circle-color': ['step', ['get', 'point_count'], '#51bbd6', 100, '#f1f075', 750, '#f28cb1'],
+        'circle-radius': ['step', ['get', 'point_count'], 20, 100, 30, 750, 40],
+      },
     });
 
     map.addLayer({
@@ -67,8 +58,8 @@ export class EarthquakesLayerManager extends LayerManager<FilterParams> {
       layout: {
         'text-field': '{point_count_abbreviated}',
         'text-font': ['Roboto Regular'],
-        'text-size': 12
-      }
+        'text-size': 12,
+      },
     });
 
     map.addLayer({
@@ -80,21 +71,34 @@ export class EarthquakesLayerManager extends LayerManager<FilterParams> {
         'circle-color': '#11b4da',
         'circle-radius': 5,
         'circle-stroke-width': 1,
-        'circle-stroke-color': '#fff'
-      }
+        'circle-stroke-color': '#fff',
+      },
     });
 
     // inspect a cluster on click
-    map.on('click', 'earthquakes-clusters', async (e) => {
-      const features = map.queryRenderedFeatures(e.point, {
-          layers: ['earthquakes-clusters']
-      });
-      const clusterId = features[0].properties.cluster_id;
-      const zoom = await (map.getSource('earthquakes') as GeoJSONSource).getClusterExpansionZoom(clusterId);
-      map.easeTo({
-        center: (features[0].geometry as Point).coordinates as [number, number],
-        zoom
-      });
+    map.on('click', 'earthquakes-clusters', (e) => {
+      void (async () => {
+        const features = map.queryRenderedFeatures(e.point, {
+          layers: ['earthquakes-clusters'],
+        });
+        const clusterFeature = features[0];
+        if (!clusterFeature) {
+          return;
+        }
+
+        const clusterId = clusterFeature.properties?.cluster_id;
+        if (clusterId === undefined) {
+          return;
+        }
+
+        const zoom = await (map.getSource('earthquakes') as GeoJSONSource).getClusterExpansionZoom(
+          clusterId,
+        );
+        map.easeTo({
+          center: (clusterFeature.geometry as Point).coordinates as [number, number],
+          zoom,
+        });
+      })();
     });
 
     // When a click event occurs on a feature in
@@ -123,45 +127,46 @@ export class EarthquakesLayerManager extends LayerManager<FilterParams> {
 
       new Popup()
         .setLngLat(coordinates)
-        .setHTML(
-          `Magnitude: ${mag}<br>Was there a tsunami?: ${tsunami}`
-        )
+        .setHTML(`Magnitude: ${mag}<br>Was there a tsunami?: ${tsunami}`)
         .addTo(map);
     });
 
     map.on('mouseenter', 'earthquakes-clusters', () => {
-        map.getCanvas().style.cursor = 'pointer';
+      map.getCanvas().style.cursor = 'pointer';
     });
     map.on('mouseleave', 'earthquakes-clusters', () => {
-        map.getCanvas().style.cursor = '';
+      map.getCanvas().style.cursor = '';
     });
   }
 
   setVisible(map: Map, visible: boolean): void {
     const visibility = visible ? 'visible' : 'none';
-    ['earthquakes-clusters', 'earthquakes-cluster-count', 'earthquakes-unclustered-point'].forEach(id => {
-      map.setLayoutProperty(
-        id,
-        'visibility',
-        visibility
-      )
-    });
+    ['earthquakes-clusters', 'earthquakes-cluster-count', 'earthquakes-unclustered-point'].forEach(
+      (id) => {
+        map.setLayoutProperty(id, 'visibility', visibility);
+      },
+    );
   }
 
   filter(map: Map, filter: FilterParams): void {
     if (!this.earthquakesData) return;
-    const filteredFeatures = this.earthquakesData.features.filter((feature: Feature<Geometry, GeoJsonProperties>) => {
-      let filtered = feature.properties?.mag >= filter.magnitudes[0] && feature.properties?.mag <= filter.magnitudes[1];
-      if (filtered && filter.tsunami !== null) {
-        filtered = filter.tsunami ? feature.properties?.tsunami === 1 : feature.properties?.tsunami === 0;
-      }
-      return filtered;
-    });
+    const filteredFeatures = this.earthquakesData.features.filter(
+      (feature: Feature<Geometry, GeoJsonProperties>) => {
+        let filtered =
+          feature.properties?.mag >= filter.magnitudes[0] &&
+          feature.properties?.mag <= filter.magnitudes[1];
+        if (filtered && filter.tsunami !== null) {
+          filtered = filter.tsunami
+            ? feature.properties?.tsunami === 1
+            : feature.properties?.tsunami === 0;
+        }
+        return filtered;
+      },
+    );
     const filteredData = {
       ...this.earthquakesData,
-      features: filteredFeatures
+      features: filteredFeatures,
     } as GeoJSON;
     (map.getSource('earthquakes') as GeoJSONSource).setData(filteredData);
   }
-
 }

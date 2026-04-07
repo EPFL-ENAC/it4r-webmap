@@ -5,26 +5,20 @@
     </q-item-section>
 
     <q-item-section>
-      <q-item-label>{{ $t(title) }}</q-item-label>
-      <q-item-label caption>{{ $t(caption) }}</q-item-label>
-      <q-item-label v-if="contribution">{{ $t(contribution) }}</q-item-label>
+      <q-item-label>{{ title }}</q-item-label>
+      <q-item-label caption>{{ caption }}</q-item-label>
     </q-item-section>
   </q-item>
 </template>
 
-<script lang="ts">
-export default defineComponent({
-  name: 'EssentialLink',
-});
-</script>
 <script setup lang="ts">
 export interface EssentialLinkProps {
   title: string;
   caption?: string;
-  contribution?: string;
   link?: string;
   icon?: string;
 }
+
 withDefaults(defineProps<EssentialLinkProps>(), {
   caption: '',
   link: '#',

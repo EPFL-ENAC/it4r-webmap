@@ -4,20 +4,11 @@
       <app-toolbar @toggle="toggleLeftDrawer" />
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      :mini="!leftDrawerOpen || miniState"
-      show-if-above
-      bordered
-    >
+    <q-drawer v-model="leftDrawerOpen" :mini="!leftDrawerOpen || miniState" show-if-above bordered>
       <div v-if="!miniState">
         <layers-drawer />
       </div>
-      <div
-        v-if="!$q.screen.lt.md"
-        class="absolute"
-        style="top: 10px; right: 10px"
-      >
+      <div v-if="!$q.screen.lt.md" class="absolute" style="top: 10px; right: 10px">
         <q-btn
           dense
           round
@@ -32,19 +23,12 @@
       v-model="helpStore.show"
       side="right"
       :width="$q.screen.lt.md ? 300 : 500"
-      overlay elevated>
+      overlay
+      elevated
+    >
       <help-drawer />
-      <div
-        class="absolute"
-        style="top: 10px; right: 10px"
-      >
-        <q-btn
-          dense
-          round
-          unelevated
-          icon="close"
-          @click="toggleRightDrawer"
-        />
+      <div class="absolute" style="top: 10px; right: 10px">
+        <q-btn dense round unelevated icon="close" @click="toggleRightDrawer" />
       </div>
     </q-drawer>
 
