@@ -1,0 +1,36 @@
+# Dependencies
+node_modules
+.pnpm-store
+.npm
+
+# Build outputs
+/dist
+/.quasar
+
+# VCS and editor
+.git
+.gitignore
+.vscode
+.idea
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Local env files
+.env
+.env.*
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Local temporary artifacts
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+quasar.config.ts.temporary.compiled.*.mjs

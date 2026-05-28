@@ -1,13 +1,11 @@
 FROM node:24-alpine AS build-stage
 
 WORKDIR /app
+
 COPY package*.json ./
+RUN npm ci --ignore-scripts
+
 COPY . .
-RUN npm ci
-ARG API_URL
-ENV API_URL=$API_URL
-ARG API_PATH
-ENV API_PATH=$API_PATH
 RUN npm run build
 
 FROM nginx:stable-alpine AS production-stage
@@ -15,5 +13,6 @@ FROM nginx:stable-alpine AS production-stage
 RUN mkdir /app
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY --from=build-stage /app/dist/spa  /app
+
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
