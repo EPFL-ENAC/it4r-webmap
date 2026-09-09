@@ -17,7 +17,7 @@
   "dependencies": {
     "@maplibre/maplibre-gl-geocoder": "^1.9.4",
     "@quasar/extras": "^1.16.4",
-    "maplibre-gl": "^5.21.1",
+    "maplibre-gl": "^6.4.1",
     "maplibregl-theme-switcher": "github:EPFL-ENAC/maplibregl-theme-switcher#1.2.0",
     "pinia": "^3.0.4",
     "pinia-plugin-persistedstate": "^4.7.1",
